@@ -41,7 +41,12 @@ while True:
         hand = hands[0]
         fingers = detector.fingersUp(hand)
         cx, cy = hand["center"]
-        print(fingers)
+        lmList = hand["lmList"]
+
+        # Constraint values for easier drawing
+        xVal = int(np.interp(lmList[8][0], [width // 2, width], [0, width]))
+        yVal = int(np.interp(lmList[8][1], [150, height - 150], [0, height]))
+        indexFinger = xVal, yVal
 
         if cy <= gestureThreshold:  # if hand is at height of the face
 
@@ -59,10 +64,14 @@ while True:
                     buttonPressed = True
                     imgNumber = imgNumber + 1
 
+        # Gesture 3 - Show Pointer
+        if fingers == [0, 1, 1, 0, 0]:
+            cv2.circle(imgCurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
+
     # Button Pressed iterations
     if buttonPressed:
         buttonCounter += 1
-        if buttonCounter > buttonDelay :
+        if buttonCounter > buttonDelay:
             buttonCounter = 0
             buttonPressed = False
 
