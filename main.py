@@ -97,8 +97,8 @@ while True:
                 buttonPressed = True
 
     else:
+        # annotationStart = False
         annotationStart = False
-
     # Button Pressed iterations
     if buttonPressed:
         buttonCounter += 1
