@@ -68,6 +68,10 @@ while True:
         if fingers == [0, 1, 1, 0, 0]:
             cv2.circle(imgCurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
 
+        # Gesture 3 - Show Pointer
+        if fingers == [0, 1, 0, 0, 0]:
+            cv2.circle(imgCurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
+
     # Button Pressed iterations
     if buttonPressed:
         buttonCounter += 1
