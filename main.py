@@ -23,6 +23,9 @@ gestureThreshold = 300
 buttonPressed = False
 buttonCounter = 0
 buttonDelay = 10
+annotations = [[]]
+annotationNumber = -1
+annotationStart = False
 
 # Hand detector
 detector = HandDetector(detectionCon=0.8, maxHands=1)
@@ -55,6 +58,9 @@ while True:
                 print("left")
                 if imgNumber > 0:
                     buttonPressed = True
+                    annotations = [[]]
+                    annotationNumber = -1
+                    annotationStart = False
                     imgNumber = imgNumber - 1
 
             # Gesture 2 - right
@@ -62,15 +68,36 @@ while True:
                 print("left")
                 if imgNumber < len(pathImages) - 1:
                     buttonPressed = True
+                    annotations = [[]]
+                    annotationNumber = -1
+                    annotationStart = False
                     imgNumber = imgNumber + 1
 
         # Gesture 3 - Show Pointer
         if fingers == [0, 1, 1, 0, 0]:
             cv2.circle(imgCurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
+            annotationStart = False
 
-        # Gesture 3 - Show Pointer
+        # Gesture 3 - Draw Pointer
         if fingers == [0, 1, 0, 0, 0]:
+            if annotationStart is False:
+                annotationStart = True
+                annotationNumber += 1
+                annotations.append([])
             cv2.circle(imgCurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
+            annotations[annotationNumber].append(indexFinger)
+        else:
+            annotationStart = False
+
+        # Gesture 5 - Erase
+        if fingers == [0, 1, 1, 1, 0]:
+            if annotations:
+                annotations.pop(-1)
+                annotationNumber -= 1
+                buttonPressed = True
+
+    else:
+        annotationStart = False
 
     # Button Pressed iterations
     if buttonPressed:
@@ -78,6 +105,11 @@ while True:
         if buttonCounter > buttonDelay:
             buttonCounter = 0
             buttonPressed = False
+
+    for i in range(len(annotations)):
+        for j in range(len(annotations[i])):
+            if j != 0:
+                cv2.line(imgCurrent, annotations[i][j-1], annotations[i][j], (0, 0, 200), 12)
 
     # Adding webcam images on the slides
     imgSmall = cv2.resize(img, (ws, hs))
