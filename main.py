@@ -13,7 +13,7 @@ cap.set(3, width)
 cap.set(4, height)
 
 # Get the list of presentation images
-pathImages = sorted(os.listdir(folderPath))
+pathImages = os.listdir(folderPath)
 print(pathImages)
 
 # Variables
